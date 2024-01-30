@@ -15,10 +15,14 @@ public class RedisConnectionTest {
     @Value("${redis.test.port}")
     private int redisPort;
 
+    @Value("${redis.test.password}")
+    private String redisPassword;
+
     @Test
     public void redisHealthCheck() {
         String testKey = "testKey";
         try (Jedis jedis = new Jedis(redisHost, redisPort)) {
+            jedis.auth(redisPassword);
             // 테스트를 위한 데이터 저장
             jedis.set(testKey, "Health Check Redis");
 
@@ -33,6 +37,7 @@ public class RedisConnectionTest {
         } finally {
             // 테스트 데이터 삭제
             try (Jedis jedis = new Jedis(redisHost, redisPort)) {
+                jedis.auth(redisPassword);
                 jedis.del(testKey);
             } catch (Exception e) {
                 e.printStackTrace();

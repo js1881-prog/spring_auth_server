@@ -17,14 +17,17 @@ public class RedisHealthIndicator implements HealthIndicator {
 
     private final String host;
     private final String port;
+    private final String password;
 
     private final ApplicationContext applicationContext;
 
     public RedisHealthIndicator(@Value("${spring.data.redis.host}") String redisHost,
                                 @Value("${spring.data.redis.port}") String redisPort,
+                                @Value("${spring.data.redis.password}") String redisPassword,
                                 ApplicationContext applicationContext) {
         this.host = redisHost;
         this.port = redisPort;
+        this.password = redisPassword;
         this.applicationContext = applicationContext;
     }
 
@@ -32,16 +35,16 @@ public class RedisHealthIndicator implements HealthIndicator {
     public Health initHealthCheck() {
         try {
             Jedis jedis = new Jedis(host, Integer.parseInt(port));
-            if ("PON".equals(jedis.ping())) {
+            jedis.auth(password);
+            if ("PONG".equals(jedis.ping())) {
                 return Health.up().build();
             } else {
-                // 예외를 발생시키고 어플리케이션을 graceful하게 종료
-                throw new RedisConnectionException("At RedisHealthIndicator Bean, Redis is not responding");
+                log.error("Redis connection Bean is not initialized");
+                SpringApplication.exit(applicationContext, () -> 1);
             }
-        } catch (RedisConnectionException e) {
-            // 예외가 발생하면 로깅 후 어플리케이션을 graceful하게 종료
-            log.error(e.toString());
-            SpringApplication.exit(applicationContext, () -> 1);
+        } catch (Exception e) {
+            log.error("Error connecting to Redis: ", e);
+             SpringApplication.exit(applicationContext, () -> 1); // 이 부분은 필요에 따라 조정
         }
         return Health.down().build();
     }
@@ -51,6 +54,7 @@ public class RedisHealthIndicator implements HealthIndicator {
     public Health health() {
         try {
             Jedis jedis = new Jedis(host, Integer.parseInt(port));
+            jedis.auth(password);
             if ("PON".equals(jedis.ping())) {
                 return Health.up().build();
             }

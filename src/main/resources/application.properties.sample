@@ -1,0 +1,9 @@
+server.shutdown=graceful
+
+spring.data.redis.host=your redis host
+spring.data.redis.port=your redis port
+spring.data.redis.password=your redis password
+
+redis.test.host=your redis test host
+redis.test.port=your redis test port
+redis.test.password=your redis test password
