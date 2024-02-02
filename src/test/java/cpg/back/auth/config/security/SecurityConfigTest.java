@@ -39,7 +39,7 @@ public class SecurityConfigTest {
     }
 
     public void idempotencyKeyIsConflicted() throws Exception {
-        // 2. idempotency-Key 충돌 케이스
+        // 3. idempotency-Key 충돌 케이스
 
     }
 

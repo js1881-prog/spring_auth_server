@@ -4,12 +4,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class IdempotencyKeyNotFoundException extends AccessDeniedException {
-    public IdempotencyKeyNotFoundException(String message) {
+public class IdempotencyKeyViolationException extends AccessDeniedException {
+    public IdempotencyKeyViolationException(String message) {
         super(message);
     }
 
-    public IdempotencyKeyNotFoundException(String message, Throwable cause) {
+    public IdempotencyKeyViolationException(String message, Throwable cause) {
         super(message, cause);
     }
 }
