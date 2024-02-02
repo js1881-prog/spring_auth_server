@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,10 +27,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(Customizer.withDefaults())
-                .addFilterBefore(new IdempotencyFilter(idemPotencyService), AuthorizationFilter.class)
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated()
-                );
+                .addFilterAfter(new IdempotencyFilter(idemPotencyService), CsrfFilter.class);
+
         return http.build();
     }
 

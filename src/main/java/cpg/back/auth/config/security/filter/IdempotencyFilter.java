@@ -21,30 +21,32 @@ public class IdempotencyFilter extends OncePerRequestFilter {
     private final IdempotencyServiceImpl idempotencyService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest servletRequest,
-                                    @NonNull HttpServletResponse servletResponse,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException, IdempotencyKeyNotFoundException {
+    protected void doFilterInternal(@NonNull HttpServletRequest servletRequest, @NonNull HttpServletResponse servletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException, IdempotencyKeyNotFoundException {
         HttpServletRequest request = servletRequest;
         HttpServletResponse response = servletResponse;
 
+        String requestMethod = request.getMethod();
+
         Optional<String> idempotencyKey = Optional.ofNullable(request.getHeader("Idempotency-key"));
 
-        try {
-            if (idempotencyKey.isPresent()) {
-                String key = idempotencyKey.get();
-                if (idempotencyService.findKey(key)) {
-                    // 동일한 idempotencyKey가 이미 존재하는 경우, 409 Conflict 와 함께 예외처리
-                    throw new IdempotencyKeyNotFoundException("Same Idempotency key is present, Http request is rejected by IdempotencyFilter");
-                } else {
-                    // 동일한 idempotencyKey가 없으므로 Redis에 idempotencyKey를 저장
-                    idempotencyService.saveKey(key);
+        if (requestMethod.equals("POST") || requestMethod.equals("PATCH") || requestMethod.equals("CONNECT")) {
+            try {
+                if (idempotencyKey.isPresent()) {
+                    String key = idempotencyKey.get();
+                    if (idempotencyService.findKey(key)) {
+                        // 동일한 idempotencyKey가 이미 존재하는 경우, 409 Conflict 와 함께 예외처리
+                        throw new IdempotencyKeyNotFoundException("Same Idempotency key is present, Http request is rejected by IdempotencyFilter");
+                    } else {
+                        // key가 없는 경우 Redis에 새로 저장
+                        idempotencyService.saveKey(key);
+                    }
                 }
+            } catch (IdempotencyKeyNotFoundException e) {
+                response.sendError(HttpServletResponse.SC_CONFLICT, "409 Conflict");
+                return;
+            } catch (Exception e) {
+                log.error("An error occurred in IdempotencyFilter: {}", e.toString());
             }
-        } catch (IdempotencyKeyNotFoundException e) {
-            response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
-            return;
-        } catch (Exception e) {
-            log.error("An error occurred in IdempotencyFilter: {}", e.toString());
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

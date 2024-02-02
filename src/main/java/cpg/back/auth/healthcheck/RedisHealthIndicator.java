@@ -1,15 +1,12 @@
-package cpg.back.auth.config.healthcheck;
+package cpg.back.auth.healthcheck;
 
 import io.lettuce.core.RedisConnectionException;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 
 @Component

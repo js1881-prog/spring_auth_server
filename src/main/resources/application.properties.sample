@@ -1,4 +1,4 @@
-server.shutdown=graceful
+server.shutdown=your shutdown strategy
 
 spring.data.redis.host=your redis host
 spring.data.redis.port=your redis port

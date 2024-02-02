@@ -1,4 +1,4 @@
-package cpg.back.auth.config.healthcheck;
+package cpg.back.auth.healthcheck;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
