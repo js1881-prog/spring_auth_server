@@ -32,7 +32,7 @@ public class IdempotencyFilter extends OncePerRequestFilter {
         if ((requestMethod.equals("POST") || requestMethod.equals("PATCH") || requestMethod.equals("CONNECT")) && idempotencyKey.isPresent()) {
             String key = idempotencyKey.get();
             try {
-                if (idempotencyService.findKey(key)) {
+                if (idempotencyService.search(key)) {
                     // 동일한 idempotencyKey가 이미 존재하는 경우, 409 Conflict 와 함께 예외처리
                     throw new IdempotencyKeyViolationException("Same Idempotency key is present, Http request is rejected by IdempotencyFilter");
                 } else {
