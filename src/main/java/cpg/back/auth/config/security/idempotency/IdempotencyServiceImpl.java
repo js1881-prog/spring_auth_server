@@ -1,11 +1,11 @@
-package cpg.back.auth.config.security.service;
+package cpg.back.auth.config.security.idempotency;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class IdempotencyServiceImpl implements IdemPotencyService {
+public class IdempotencyServiceImpl implements IdempotencyService {
 
     @Override
     public boolean search(String key) {

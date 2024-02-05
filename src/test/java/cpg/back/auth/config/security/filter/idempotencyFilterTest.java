@@ -1,6 +1,7 @@
 package cpg.back.auth.config.security.filter;
 
-import cpg.back.auth.config.security.service.IdempotencyServiceImpl;
+import cpg.back.auth.config.security.idempotency.IdempotencyFilter;
+import cpg.back.auth.config.security.idempotency.IdempotencyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

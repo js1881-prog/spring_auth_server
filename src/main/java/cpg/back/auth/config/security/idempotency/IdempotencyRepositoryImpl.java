@@ -1,4 +1,4 @@
-package cpg.back.auth.config.security.repository;
+package cpg.back.auth.config.security.idempotency;
 
 
 import org.springframework.stereotype.Repository;

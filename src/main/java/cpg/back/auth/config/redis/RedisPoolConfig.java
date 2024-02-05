@@ -12,7 +12,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @ToString
-public class CustomPoolConfig {
+public class RedisPoolConfig {
 
     @Value("${redis.pool.config.max.total}")
     private int maxTotal;

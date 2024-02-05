@@ -1,8 +1,7 @@
 package cpg.back.auth.config.security;
 
-import cpg.back.auth.config.security.filter.IdempotencyFilter;
-import cpg.back.auth.config.security.service.IdemPotencyService;
-import cpg.back.auth.config.security.service.IdempotencyServiceImpl;
+import cpg.back.auth.config.security.idempotency.IdempotencyFilter;
+import cpg.back.auth.config.security.idempotency.IdempotencyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -24,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final IdempotencyServiceImpl idemPotencyService;
+    private final IdempotencyService idemPotencyService;
 
     // *** Security sequence
     // **** 1. csrf 체크

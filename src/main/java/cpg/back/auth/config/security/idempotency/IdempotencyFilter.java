@@ -1,6 +1,5 @@
-package cpg.back.auth.config.security.filter;
+package cpg.back.auth.config.security.idempotency;
 
-import cpg.back.auth.config.security.service.IdempotencyServiceImpl;
 import cpg.back.auth.exception.IdempotencyKeyViolationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IdempotencyFilter extends OncePerRequestFilter {
 
-    private final IdempotencyServiceImpl idempotencyService;
+    private final IdempotencyService idempotencyService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest servletRequest, @NonNull HttpServletResponse servletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
