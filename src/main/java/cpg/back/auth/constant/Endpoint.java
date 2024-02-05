@@ -2,34 +2,30 @@ package cpg.back.auth.constant;
 
 import lombok.Getter;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
-
-import static java.lang.reflect.Modifier.isFinal;
-import static java.lang.reflect.Modifier.isStatic;
+import java.util.stream.Collectors;
 
 @Getter
 public class Endpoint {
     public static final String V1_AUTHS_ANONYMOUS = "/api/v1/auths/anonymous";
     public static final String V2_AUTHS_ANONYMOUS = "/api/v2/auths/anonymous";
 
-    public static List<String> getEndpointsAsList() {
-        List<String> endpoints = new ArrayList<>();
-        Field[] fields = Endpoint.class.getFields();
+    public static final String V1_PUBLIC_KEY = "/api/v1/auths/public-key";
 
-        for (Field field : fields) {
-            if (isStatic(field.getModifiers()) &&
-                    isFinal(field.getModifiers()) &&
-                    field.getType().equals(String.class)) {
-                try {
-                    String value = (String) field.get(null);
-                    endpoints.add(value);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return endpoints;
+    public static List<String> getEndpointsAsList() {
+        return Arrays.stream(Endpoint.class.getFields())
+                .filter(field -> Modifier.isStatic(field.getModifiers()) &&
+                        Modifier.isFinal(field.getModifiers()) &&
+                        field.getType().equals(String.class))
+                .map(field -> {
+                    try {
+                        return (String) field.get(null);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

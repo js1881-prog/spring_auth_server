@@ -1,6 +1,7 @@
 package cpg.back.auth.interceptor;
 
 import cpg.back.auth.constant.Endpoint;
+import cpg.back.auth.util.IP;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,9 @@ public class ApiVersionRedirectInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestUri = request.getRequestURI();
+
+        //        String userIp = IP.getClientIP(request);
+        //        String agent = request.getHeader("User-Agent");
 
         // "/api/v"로 시작하는 URI 패턴 매칭 확인
         if (requestUri.matches("/api/v[0-9]+/.+")) {
