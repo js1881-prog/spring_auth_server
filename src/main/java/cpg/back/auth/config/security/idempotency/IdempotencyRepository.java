@@ -1,8 +1,10 @@
 package cpg.back.auth.config.security.idempotency;
 
-public interface IdempotencyRepository {
-    Boolean hasKey();
+import java.util.concurrent.TimeUnit;
 
-    void save();
+public interface IdempotencyRepository {
+    Boolean hasKey(String key);
+
+    void save(String key, Object value);
 
 }

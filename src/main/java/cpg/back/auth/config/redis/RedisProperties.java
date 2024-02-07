@@ -12,8 +12,19 @@ import java.time.Duration;
 @Getter
 @Setter
 @ToString
-public class RedisPoolConfig {
+public class RedisProperties {
 
+    // Redis 서버의 기본 연결 설정
+    @Value("${redis.host}")
+    private String host;
+
+    @Value("${redis.port}")
+    private int port;
+
+    @Value("${redis.password}")
+    private String password;
+
+    // Redis 풀 설정
     @Value("${redis.pool.config.max.total}")
     private int maxTotal;
 

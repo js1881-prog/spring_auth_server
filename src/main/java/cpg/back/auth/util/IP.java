@@ -2,11 +2,13 @@ package cpg.back.auth.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
 public class IP {
 
-    public static String getClientIP(HttpServletRequest request) {
+    public String getClientIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
 
         if (ip == null) {

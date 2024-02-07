@@ -15,7 +15,7 @@ public class AuthTestEndPointController {
     }
 
     @PostMapping("/secure-endpoint-post")
-    public ResponseEntity<String> checkPost() {
-        return ResponseEntity.ok("Ok");
+    public void checkPost() {
+        return;
     }
 }
