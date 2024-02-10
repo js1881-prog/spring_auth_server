@@ -14,15 +14,23 @@ import java.time.Duration;
 @ToString
 public class RedisProperties {
 
-    // Redis 서버의 기본 연결 설정
     @Value("${redis.host}")
     private String host;
 
     @Value("${redis.port}")
     private int port;
 
-    @Value("${redis.password}")
-    private String password;
+    @Value("${redis.ha.strategy}")
+    private String haStrategy;
+
+    @Value("${redis.sentinel.master}")
+    private String sentinelMaster;
+
+    @Value("${redis.sentinel.nodes}")
+    private String sentinelNodes;
+
+    @Value("${redis.cluster.nodes}")
+    private String clusterNodes;
 
     // Redis 풀 설정
     @Value("${redis.pool.config.max.total}")
@@ -43,3 +51,4 @@ public class RedisProperties {
     @Value("${redis.pool.config.time.between.eviction.runs}")
     private Duration timeBetweenEvictionRuns;
 }
+

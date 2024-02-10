@@ -8,14 +8,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConfiguration;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.util.Arrays;
 
 @Configuration
 @Slf4j
@@ -24,12 +29,56 @@ public class RedisConfig {
     private final RedisProperties redisProperties;
 
     @Bean
-    public RedisStandaloneConfiguration config() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisProperties.getHost());
-        redisStandaloneConfiguration.setPort(redisProperties.getPort());
-        return redisStandaloneConfiguration;
+    public RedisConfiguration config() {
+        return switch (redisProperties.getHaStrategy().toUpperCase()) {
+            case "SENTINEL" -> sentinelConfig();
+            case "CLUSTER" -> clusterConfig();
+            default -> standaloneConfig();
+        };
     }
+
+    @Conditional(RedisHACondition.OnStandaloneCondition.class)
+    public RedisStandaloneConfiguration standaloneConfig() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisProperties.getHost());
+        config.setPort(redisProperties.getPort());
+        return config;
+    }
+
+    @Conditional(RedisHACondition.OnSentinelCondition.class)
+    public RedisSentinelConfiguration sentinelConfig() {
+        RedisSentinelConfiguration config = new RedisSentinelConfiguration();
+        config.master(redisProperties.getSentinelMaster());
+
+        for (String nodeInfo : redisProperties.getSentinelNodes().split(",")) {
+            String[] parts = nodeInfo.split(":");
+            if (parts.length == 2) {
+                String host = parts[0];
+                int port = Integer.parseInt(parts[1]);
+                config.sentinel(host, port);
+            } else {
+                throw new IllegalArgumentException("Invalid Redis Sentinel node configuration: " + nodeInfo);
+            }
+        }
+        return config;
+    }
+
+    @Conditional(RedisHACondition.OnClusterCondition.class)
+    public RedisClusterConfiguration clusterConfig() {
+        RedisClusterConfiguration config = new RedisClusterConfiguration();
+        for (String node : redisProperties.getClusterNodes().split(",")) {
+            String[] parts = node.split(":");
+            if (parts.length == 2) {
+                String host = parts[0];
+                int port = Integer.parseInt(parts[1]);
+                config.clusterNode(host, port);
+            } else {
+                throw new IllegalArgumentException("Invalid Redis Cluster node configuration: " + node);
+            }
+        }
+        return config;
+    }
+
 
     @Bean
     public GenericObjectPoolConfig<?> pool() {
@@ -42,12 +91,12 @@ public class RedisConfig {
     }
 
     @Bean
-    public LettuceConnectionFactory lettuceConnectionFactory(RedisConfiguration redisConfig) {
+    public LettuceConnectionFactory lettuceConnectionFactory(RedisConfiguration config) {
         LettucePoolingClientConfiguration lettuceConfig = LettucePoolingClientConfiguration.builder()
                 .poolConfig(pool())
                 .build();
 
-        LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(redisConfig, lettuceConfig);
+        LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(config, lettuceConfig);
         connectionFactory.setShareNativeConnection(false);
         return connectionFactory;
     }
@@ -64,8 +113,8 @@ public class RedisConfig {
     @Bean
     public ObjectMapper redisTimeMapper() {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 API 지원 추가
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 타임스탬프 대신 ISO 형식 사용
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }
 

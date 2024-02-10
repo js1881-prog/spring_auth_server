@@ -1,10 +1,12 @@
 package cpg.back.auth.config.security;
 
+import cpg.back.auth.config.security.cors.CorsConfig;
 import cpg.back.auth.config.security.idempotency.IdempotencyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,7 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final IdempotencyFilter idempotencyFilter;
-
+    private final CorsConfig corsConfig;
     @Value("${enable.csrf}")
     private boolean useCsrf;
 
@@ -36,30 +38,20 @@ public class SecurityConfig {
                 // Rest api 구현을 위한 options
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(configurationSource()))
+                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
                 // Main filters
                 if (!useCsrf) {
                     http.csrf(AbstractHttpConfigurer::disable);
+                } else {
+                    http.csrf(Customizer.withDefaults());
                 }
 
-                http.addFilterAfter(idempotencyFilter, CsrfFilter.class);
+                http.addFilterBefore(idempotencyFilter, CsrfFilter.class);
 
         return http.build();
-    }
-
-    public CorsConfigurationSource configurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedOriginPattern("*");
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
 }
