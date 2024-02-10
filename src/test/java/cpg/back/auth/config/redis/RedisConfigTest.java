@@ -1,4 +1,4 @@
-package cpg.back.auth.config;
+package cpg.back.auth.config.redis;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

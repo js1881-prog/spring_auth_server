@@ -38,9 +38,6 @@ public class SecurityConfigTest {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-    public void idempotencyKeyIsConflicted() throws Exception {
-        // 3. idempotency-Key 충돌 케이스
-
-    }
+    // idempotency-Key 충돌 케이스 => IdempotencyFilterTest에서 테스팅
 
 }

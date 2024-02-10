@@ -63,7 +63,6 @@ public class IdempotencyFilter extends OncePerRequestFilter {
     }
 
     private void saveIdempotencyKey(String key, HttpServletRequest request) {
-        // Logic to save the idempotency key
         IdempotencyDTO idempotencyDTO = IdempotencyDTO.builder()
                 .ip(ip.getClientIP(request))
                 .agent(request.getHeader("User-Agent"))

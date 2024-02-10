@@ -3,6 +3,9 @@ package cpg.back.auth.core.service;
 import cpg.back.auth.core.dto.PublicKeyResponseDto;
 import cpg.back.auth.util.KeyGenerator;
 import cpg.back.auth.util.RS256Jwt;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.MalformedKeyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,7 @@ public class CoreServiceImpl implements CoreService {
     private final KeyGenerator keyGenerator;
 
     @Override
-    public String generateJwt() {
+    public String generateJwt() throws MalformedKeyException, ExpiredJwtException, UnsupportedJwtException {
         String uuid = UUID.randomUUID().toString();
         return rs256Jwt.createToken(uuid);
     }

@@ -1,8 +1,7 @@
 package cpg.back.auth.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.MalformedKeyException;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.SignatureException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +31,8 @@ public class RS256Jwt {
     protected void init() throws IOException, GeneralSecurityException {
         secretKey = keyGenerator.getPrivateKey();
     }
-
-    public String createToken(String userPk) {
+    public String createToken(String userPk) throws MalformedKeyException, ExpiredJwtException, UnsupportedJwtException,
+            IllegalArgumentException {
         Claims claims = Jwts.claims().subject(userPk).build();
         Map<String, Object> header = new HashMap<>();
         header.put("alg", "RS256");
@@ -66,7 +67,7 @@ public class RS256Jwt {
     public boolean validateToken(String jwtToken, PrivateKey privateKey) {
         try {
             Jws<Claims> claims = Jwts.parser().decryptWith(privateKey).build().parseSignedClaims(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            return !claims.getPayload().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }

@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public class Endpoint {
     public static final String V1_AUTHS_ANONYMOUS = "/api/v1/auths/anonymous";
     public static final String V2_AUTHS_ANONYMOUS = "/api/v2/auths/anonymous";
-
     public static final String V1_PUBLIC_KEY = "/api/v1/auths/public-key";
 
     public static List<String> getEndpointsAsList() {
