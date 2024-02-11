@@ -17,7 +17,6 @@ public class SecurityConfigTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @Test
     @WithMockUser
     public void successCase() throws Exception {
@@ -37,7 +36,5 @@ public class SecurityConfigTest {
                 .with(SecurityMockMvcRequestPostProcessors.csrf().useInvalidToken()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
-
-    // idempotency-Key 충돌 케이스 => IdempotencyFilterTest에서 테스팅
 
 }

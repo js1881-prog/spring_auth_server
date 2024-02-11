@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
@@ -23,12 +24,14 @@ class IdempotencyTest {
         String testKey = UUID.randomUUID().toString();
         // Idempotency Key 1차 요청, 중복된 키가 아니므로 Ok를 받아야한다
         mockMvc.perform(post("/secure-endpoint-post")
-                        .header("Idempotency-Key", testKey))
+                        .header("Idempotency-Key", testKey)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isOk());
 
         // Idempotency Key 2차 요청, 중복된 키가 이미 존재하므로 409를 받아야한다
         mockMvc.perform(post("/secure-endpoint-post")
-                        .header("Idempotency-Key", testKey))
+                        .header("Idempotency-Key", testKey)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
                 .andExpect(status().isConflict());
 
     }

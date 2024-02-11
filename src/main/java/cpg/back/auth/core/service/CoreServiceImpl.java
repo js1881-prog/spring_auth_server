@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.UUID;
 
 @Service
@@ -37,13 +38,14 @@ public class CoreServiceImpl implements CoreService {
     public PublicKeyResponseDto extractKey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         PublicKey publicKey = keyGenerator.getPublicKey();
+        String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
 
         RSAPublicKeySpec publicSpec = keyFactory.getKeySpec(publicKey, RSAPublicKeySpec.class);
         String publicKeyModulus = publicSpec.getModulus().toString(16);
         String publicKeyExponent = publicSpec.getPublicExponent().toString(16);
 
         return PublicKeyResponseDto.builder()
-                .publicKey(publicKey.toString())
+                .publicKey(publicKeyString)
                 .RSAExponent(publicKeyModulus)
                 .RSAModulus(publicKeyExponent)
                 .build();
