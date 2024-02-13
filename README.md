@@ -29,6 +29,7 @@ made by [js1881-prog](https://github.com/js1881-prog)
 - [spring-boot-aop]
 - [log4j:2.2.0.0]
 - [lombok]
+- [mockito]
 ```
 
 ## Functions
