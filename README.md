@@ -2,6 +2,8 @@
 
 SpringBoot boilerplate for creating REST API server 👍
 
+made by [js1881-prog](https://github.com/js1881-prog)
+
 ## Quick Overview 🚀
 
 ```
