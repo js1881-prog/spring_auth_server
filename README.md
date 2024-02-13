@@ -85,3 +85,11 @@ made by [js1881-prog](https://github.com/js1881-prog)
 
 1. [RunTimeError들에 대한 중앙 집중화](https://github.com/js1881-prog/spring_auth_server/blob/main/src/main/java/cpg/back/auth/exception/GlobalHandler.java), 가벼운 에러 로깅 기능, try-catch Brace없는 깔끔한 코드 컨벤션 처리가 목적
 2. Spring이 제공하는 Default Exception 외에, 상황에 따른 CustomException도 확장성 높게 추가 가능
+
+
+
+### 4. Test Code
+
+1. [security](https://github.com/js1881-prog/spring_auth_server/blob/main/src/test/java/cpg/back/auth/config/security/SecurityConfigTest.java), [filter에 대한 엔드포인트 테스트](https://github.com/js1881-prog/spring_auth_server/blob/main/src/test/java/cpg/back/auth/config/security/filter/IdempotencyTest.java)
+2. [URL포워딩 interceptor, 엔드포인트 테스트](https://github.com/js1881-prog/spring_auth_server/blob/main/src/test/java/cpg/back/auth/interceptor/ApiVersionRedirectInterceptorTest.java)
+3. [CoreService, tdd](https://github.com/js1881-prog/spring_auth_server/blob/main/src/test/java/cpg/back/auth/core/service/CoreServiceTest.java)
