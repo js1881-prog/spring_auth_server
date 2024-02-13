@@ -1,9 +1,38 @@
-server.shutdown=your shutdown strategy
+//your shut down strategy
+server.shutdown=
 
-spring.data.redis.host=your redis host
-spring.data.redis.port=your redis port
-spring.data.redis.password=your redis password
+logging.level.root=
+logging.level.org.springframework.security=
+spring.mvc.pathmatch.matching-strategy=
 
-redis.test.host=your redis test host
-redis.test.port=your redis test port
-redis.test.password=your redis test password
+// boolean
+enable.csrf=
+
+cors.allowed-origins=
+cors.allowed-methods=
+cors.allowed-headers=
+// boolean
+cors.allow-credentials=
+
+# ENUM : STANDALONE, SENTINEL, CLUSTER
+redis.ha.strategy=
+
+# Sentinel conf (nodes conf e.g: = 127.0.0.1:26379,127.0.0.2:26380)
+redis.sentinel.master=
+redis.sentinel.nodes=
+
+# Sentinel conf (e.g: = 127.0.0.1:6379,127.0.0.2:6380)
+redis.cluster.nodes=
+
+redis.host=
+redis.port=
+redis.pool.config.max.total=
+redis.pool.config.max.idle=
+redis.pool.config.min.idle=
+redis.pool.config.max.wait=
+redis.pool.config.test.while.idle=
+redis.pool.config.time.between.eviction.runs=
+
+redis.test.host=
+redis.test.port=
+redis.test.password=
