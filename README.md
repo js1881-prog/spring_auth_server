@@ -17,6 +17,17 @@ made by [js1881-prog](https://github.com/js1881-prog)
 ```
 
 
+### Usage Endpoint
+
+```
+"/actuator/health" : Health check, 어플리케이션, 레디스 연결 상태 
+
+"/api/v2/auths/anonymous" : Authorization Bearer Header에 jwt(RS256) 토큰 지급, /resources/private-key.pem(public-key.pem) 기반 signature
+
+"/api/v1/auths/public-key" : jwt decode를 위한 public-Key 지급
+```
+
+
 ## Dependencies
 
 [ Java 17, SpringBoot 3.2.2 ]
@@ -27,6 +38,7 @@ made by [js1881-prog](https://github.com/js1881-prog)
 - [jjwt:0.12.5]
 - [guava:r05]
 - [spring-boot-aop]
+- [spring-boot-stater-actuator:3.1.2]
 - [log4j:2.2.0.0]
 - [lombok]
 - [mockito]
