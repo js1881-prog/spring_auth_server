@@ -3,7 +3,6 @@ package cpg.back.auth.config.security;
 import cpg.back.auth.config.security.cors.CorsConfig;
 import cpg.back.auth.config.security.idempotency.IdempotencyFilter;
 import cpg.back.auth.config.security.log.MDCLoggingFilter;
-import jakarta.servlet.http.HttpFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.header.HeaderWriterFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
